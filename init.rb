@@ -1,6 +1,7 @@
 require "ruby2d"
 require_relative "board"
 require_relative "snake"
+require_relative "controler"
 
 #set window settings
 set({
@@ -27,87 +28,40 @@ snake_instance = Snake.new(snake_options)
 snake_instance.draw
 
 # class whitch store history of positions pice of snake
-class Controls
-  def initialize(shape_chain)
-    @shape_chain = shape_chain
-    @controls = nil
-  end
+controler = Controler.new
+controler.extract_positions(snake_instance.snake)
 
-  attr_accessor :controls
-
-  def move(newControls)
-    @controls.shift
-    @controls.push newControls
-    @controls
-  end
-
-  def poss_shapes()
-    @controls = @shape_chain.map do |i|
-      {:poss_x => i.x, :poss_y => i.y}
-    end
-  end
-end
-
-controls = Controls.new(snake_instance.snake)
-controls.poss_shapes
-
-@x_speed = 0
-@y_speed = 0
-
-tick = 0
 
 is_game_start = false
-
-
 # listener of keypresses
 on :key_down do |event|
   case event.key
   when 'left'
     is_game_start = true
-    @x_speed = -50
-    @y_speed = 0
+    controler.x_direction = -50
+    controler.y_direction = 0
   when 'right'
     is_game_start = true
-    @x_speed = 50
-    @y_speed = 0
+    controler.x_direction = 50
+    controler.y_direction = 0
   when 'up'
     is_game_start = true
-    @x_speed = 0
-    @y_speed = -50
+    controler.x_direction = 0
+    controler.y_direction = -50
   when 'down'
     is_game_start = true
-    @x_speed = 0
-    @y_speed = 50
-  end
-end
-
-
-def validatePlace(poss)
-  if poss > 450
-    0
-  elsif poss < 0
-    450
-  else
-    poss
+    controler.x_direction = 0
+    controler.y_direction = 50
   end
 end
 
 # infinity loop
+tick = 0
+
 update do
   tick += 1
   next unless tick % 60 == 0 && is_game_start
-  # snake_instance.snake
-  leadShape = snake_instance.snake[snake_instance.snake.length - 1]
-  controls.move({
-    :poss_x => validatePlace(leadShape.x + @x_speed),
-    :poss_y => validatePlace(leadShape.y + @y_speed)
-  })
-
-  snake_instance.snake.each_with_index do |i, x|
-    pp controls.controls[x][:poss_y]
-    i.x = controls.controls[x][:poss_x]
-    i.y = controls.controls[x][:poss_y]
-  end
+  controler.move(snake_instance.snake)
 end
 
 show

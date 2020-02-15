@@ -23,11 +23,22 @@ class Controler
     }
 
     eaten_coin = coins.find { |i| i.x == new_leading_pos[:x] && i.y == new_leading_pos[:y] }
-    coin_generator.remove(eaten_coin) if eaten_coin
 
-    # pp new_leading_pos
+    if eaten_coin
+      coin_generator.remove(eaten_coin)
+      snake_instance.increase_snake
+      increase_positions
+    end
+
     update_store(new_leading_pos)
     draw(snake)
+  end
+
+  def increase_positions
+    x = @storage[0][:x]
+    y = @storage[0][:y]
+
+    @storage.unshift({ x: x, y: y})
   end
 
   private

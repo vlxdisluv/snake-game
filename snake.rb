@@ -21,6 +21,15 @@ class Snake
     end
   end
 
+  def increase_snake
+    @options[:x] = @snake[0].x
+    @options[:y] = @snake[0].y
+
+    pice = Square.new(@options)
+
+    @snake.unshift(pice)
+  end
+
   def push_pice(pice)
     @snake << pice
   end

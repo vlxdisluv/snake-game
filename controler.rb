@@ -1,22 +1,23 @@
 class Controler
-  attr_accessor :storage, :x_direction, :y_direction
+  attr_accessor :storage, :x_direction, :y_direction, :is_game_start
 
   def initialize(init_store = [])
     @storage = init_store
     @x_direction = 0
     @y_direction = 0
+    @is_game_start = false
   end
 
   def extract_positions(snake)
-    @storage = snake.map { |i| { pos_x: i.x, pos_y: i.y }}
+    @storage = snake.map { |i| { x: i.x, y: i.y }}
   end
 
   def move(snake)
     leading_pice = snake[snake.length - 1]
 
     new_leading_pos = {
-      pos_x: validate(leading_pice.x + @x_direction),
-      pos_y: validate(leading_pice.y + @y_direction)
+      x: validate(leading_pice.x + @x_direction),
+      y: validate(leading_pice.y + @y_direction)
     }
 
     update_store(new_leading_pos)
@@ -32,8 +33,8 @@ class Controler
     def draw(snake)
       snake.each_with_index do |i, x|
         current_pos = @storage[x]
-        i.x = current_pos[:pos_x]
-        i.y = current_pos[:pos_y]
+        i.x = current_pos[:x]
+        i.y = current_pos[:y]
       end
     end
 

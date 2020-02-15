@@ -4,17 +4,18 @@ class Snake
   def initialize(options = {:length => 3, :size => 50})
     @snake = [];
     @snake_length = options[:length]
-    @snake_size = options[:size]
+    @options = {
+      size: options[:size],
+      color: 'green'
+    }
   end
 
   def draw
     @snake_length.times do |i|
-      pice =  Square.new(
-        x: normalize(i),
-        y: normalize(0),
-        size: @snake_size,
-        color: 'green',
-      )
+      @options[:x] = normalize(i)
+      @options[:y] = normalize(0)
+
+      pice =  Square.new(@options)
 
       push_pice(pice)
     end
@@ -24,7 +25,7 @@ class Snake
     @snake << pice
   end
 
-  def normalize(coord)
-    coord * @snake_size
+  def normalize(value)
+    value * 50
   end
 end

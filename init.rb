@@ -27,12 +27,13 @@ board_instance.draw
 snake_instance = Snake.new(length: 3, size: 50)
 snake_instance.draw
 
+# init coin generator
+coin_generator = CoinGenerator.new('./assets/coin.png')
+
 # init controler
 controler = Controler.new
 controler.extract_positions(snake_instance.snake)
 
-# init coin generator
-coint_generator = CoinGenerator.new('./assets/coin.png')
 
 # listen to the keys
 on :key_down do |event|
@@ -59,8 +60,8 @@ end
 # game speed loop
 game_tick = 0
 update do
-  controler.move(snake_instance.snake) if game_tick % 60 == 0 && controler.is_game_start
-  coint_generator.generate(controler.storage) if game_tick % 300 == 0 && controler.is_game_start
+  controler.move(snake_instance, coin_generator) if game_tick % 60 == 0 && controler.is_game_start
+  coin_generator.generate(controler.storage) if game_tick % 300 == 0 && controler.is_game_start
 
   game_tick += 1
 end

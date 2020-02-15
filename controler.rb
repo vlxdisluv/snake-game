@@ -12,14 +12,20 @@ class Controler
     @storage = snake.map { |i| { x: i.x, y: i.y }}
   end
 
-  def move(snake)
-    leading_pice = snake[snake.length - 1]
+  def move(snake_instance, coin_generator)
+    snake = snake_instance.snake
+    coins = coin_generator.storage
 
+    leading_pice = snake[snake.length - 1]
     new_leading_pos = {
       x: validate(leading_pice.x + @x_direction),
       y: validate(leading_pice.y + @y_direction)
     }
 
+    eaten_coin = coins.find { |i| i.x == new_leading_pos[:x] && i.y == new_leading_pos[:y] }
+    coin_generator.remove(eaten_coin) if eaten_coin
+
+    # pp new_leading_pos
     update_store(new_leading_pos)
     draw(snake)
   end

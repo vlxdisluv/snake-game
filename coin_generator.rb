@@ -1,4 +1,6 @@
 class CoinGenerator
+  attr_accessor :storage
+
   def initialize(path)
     @storage = []
 
@@ -29,18 +31,26 @@ class CoinGenerator
     x = rand(10)
     y = rand(10)
 
-    convert_storage = @storage.map { |i| {x: i.x, y: i.y} }
-    combined_storege = snake_storage + convert_storage
+    coins_pos = storage_to_hash
+    combined_storage = snake_storage + coins_pos
 
-    matches = combined_storege.find do |i|
+    is_matched = combined_storage.find do |i|
       (simplify(i[:x]) == x) && (simplify(i[:y]) == y)
     end
 
     # @TODO: define count of the empty positions for handling of satck overflow
+    return {x: x, y: y} unless is_matched
 
-    return random_free_pos(snake_storage) if matches
+    random_free_pos(snake_storage)
+  end
 
-    return {x: x, y: y}
+  def storage_to_hash
+    @storage.map { |i| {x: i.x, y: i.y} }
+  end
+
+  def remove(eaten_coin)
+    @storage = @storage.filter { |i| i.data != eaten_coin.data }
+    eaten_coin.remove
   end
 
   private

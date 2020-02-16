@@ -22,7 +22,7 @@ class Game
     refresh_tick
     @speed += 1 unless @speed >= 59
     @score += 1
-    game.grow_song
+    grow_song
   end
 
   def stop

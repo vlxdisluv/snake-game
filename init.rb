@@ -1,9 +1,11 @@
 require "ruby2d"
+require_relative "game"
 require_relative "board"
 require_relative "snake"
 require_relative "controler"
 require_relative "coin_generator"
 
+game = Game.new
 #set window settings
 set({
   title: "Snake Game",
@@ -37,34 +39,32 @@ controler.extract_positions(snake_instance.snake)
 
 # listen to the keys
 on :key_down do |event|
+  game.status = 'start' unless game.status = 'start'
+
   case event.key
+  when 'escape'
+    game.status = 'stop'
   when 'left'
-    controler.is_game_start = true
     controler.x_direction = -50
     controler.y_direction = 0
   when 'right'
-    controler.is_game_start = true
     controler.x_direction = 50
     controler.y_direction = 0
   when 'up'
-    controler.is_game_start = true
     controler.x_direction = 0
     controler.y_direction = -50
   when 'down'
-    controler.is_game_start = true
     controler.x_direction = 0
     controler.y_direction = 50
   end
 end
 
-# game speed loop
-game_tick = 0
+# game loop
 update do
-  controler.move(snake_instance, coin_generator) if game_tick % 60 == 0 && controler.is_game_start
-  coin_generator.generate(controler.storage) if game_tick % 300 == 0 && controler.is_game_start
+  controler.move(snake_instance, coin_generator, game) if game.tick % (60 - game.speed) == 0 && game.status == "start"
+  coin_generator.generate(controler.storage) if game.tick % 300 == 0 && game.status == "start"
 
-  game_tick += 1
+  game.tick += 1
 end
-
 
 show

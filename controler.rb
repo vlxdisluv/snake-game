@@ -1,18 +1,18 @@
 class Controler
-  attr_accessor :storage, :x_direction, :y_direction, :is_game_start
+  attr_accessor :storage, :x_direction, :y_direction
 
   def initialize(init_store = [])
     @storage = init_store
-    @x_direction = 0
+    @x_direction = 50
     @y_direction = 0
-    @is_game_start = false
   end
 
   def extract_positions(snake)
     @storage = snake.map { |i| { x: i.x, y: i.y }}
   end
 
-  def move(snake_instance, coin_generator)
+  def move(snake_instance, coin_generator, game)
+    pp game.score
     snake = snake_instance.snake
     coins = coin_generator.storage
 
@@ -28,6 +28,7 @@ class Controler
       coin_generator.remove(eaten_coin)
       snake_instance.increase_snake
       increase_positions
+      game.increase_stats
     end
 
     update_store(new_leading_pos)

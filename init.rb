@@ -39,11 +39,11 @@ controler.extract_positions(snake_instance.snake)
 
 # listen to the keys
 on :key_down do |event|
-  game.status = 'start' unless game.status = 'start'
+  game.start unless game.status == 'start'
 
   case event.key
   when 'escape'
-    game.status = 'stop'
+    game.pause
   when 'left'
     controler.x_direction = -50
     controler.y_direction = 0

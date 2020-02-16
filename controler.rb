@@ -22,6 +22,13 @@ class Controler
       y: validate(leading_pice.y + @y_direction)
     }
 
+    eaten_self = snake.drop(1).find { |i| i.x == new_leading_pos[:x] && i.y == new_leading_pos[:y] }
+
+    if eaten_self
+      game.game_over_song
+      game.stop
+    end
+
     eaten_coin = coins.find { |i| i.x == new_leading_pos[:x] && i.y == new_leading_pos[:y] }
 
     if eaten_coin

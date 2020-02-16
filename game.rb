@@ -7,30 +7,37 @@ class Game
     @status = "stop"
     @tick = 0
 
-    @song = Music.new('./assets/song.mp3')
-    @song.volume = 10
-    @song.loop = true
-    @song.play
-    @song.pause
+    @grow = Music.new('./assets/grow.mp3')
+    @grow.volume = 10
+
+    @game_over = Music.new('./assets/game_over.mp3')
+    @game_over.volume = 10
   end
 
   def refresh_tick
-    @tick = 0
+    @tick = 1
   end
 
   def increase_stats
     refresh_tick
     @speed += 1 unless @speed >= 59
     @score += 1
+    game.grow_song
   end
 
-  def pause
+  def stop
     @status = "stop"
-    @song.pause
   end
 
   def start
     @status = "start"
-    @song.resume
+  end
+
+  def grow_song
+    @grow.play
+  end
+
+  def game_over_song
+    @game_over.play
   end
 end
